@@ -1,6 +1,7 @@
 package com.genc.omnichannel.promotions.model;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -21,9 +22,11 @@ public class Coupon {
     @Column(name = "discountValue", nullable = false)
     private double discountValue;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Column(name = "validFrom", nullable = false)
     private LocalDate validFrom;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Column(name = "validTo", nullable = false)
     private LocalDate validTo;
 

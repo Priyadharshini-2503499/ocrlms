@@ -103,7 +103,7 @@ public class PromotionService {
 
         c.setCouponCode(newCode);
         if (dto.getDiscountType() != null) c.setDiscountType(dto.getDiscountType().toUpperCase());
-        if (dto.getDiscountValue() > 0) c.setDiscountValue(dto.getDiscountValue());
+        c.setDiscountValue(dto.getDiscountValue());
         if (dto.getValidFrom() != null) c.setValidFrom(dto.getValidFrom());
         if (dto.getValidTo() != null) c.setValidTo(dto.getValidTo());
         c.setTargetTier(resolveTargetTier(dto.getTargetTier()));
