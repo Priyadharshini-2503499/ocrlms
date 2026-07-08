@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Register Customer')}"></head>
+<body>
+
+<div class="app">
+  <aside th:replace="~{fragments/layout :: sidebar('admin','customers')}"></aside>
+
+  <main class="main">
+    <header th:replace="~{fragments/layout :: topbar('Customer Registration','Create a new customer profile','Customer Service Agent','CS')}"></header>
+
+    <section class="content">
+      <a th:href="@{/customer/dashboard}" class="back-link">&larr; Back to customers</a>
+      <div id="errAlert" class="alert" style="display:none; margin-bottom:18px;"></div>
+
+      <div class="form-wrap">
+        <div class="card">
+          <div class="card-h">
+            <div>
+              <h2>New customer profile</h2>
+              <p>Starts at default SILVER tier status with 0 points.</p>
+            </div>
+          </div>
+          <div class="card-b">
+            <form id="registerForm">
+              <div class="field">
+                <label>Full Name</label>
+                <input type="text" id="fullName" placeholder="Name" required/>
+              </div>
+              <div class="form-row">
+                <div class="field">
+                  <label>Email Address</label>
+                  <input type="email" id="emailId" placeholder="name@example.com" required/>
+                </div>
+                <div class="field">
+                  <label>Phone Number</label>
+                  <input type="text" id="phoneNumber" placeholder="+91 9000000000" required/>
+                </div>
+              </div>
+              <div class="form-actions">
+                <a th:href="@{/customer/dashboard}" class="btn btn-ghost">Cancel</a>
+                <button type="submit" class="btn btn-primary">Register</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  document.getElementById('registerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const payload = {
+      fullName: document.getElementById('fullName').value,
+      emailId: document.getElementById('emailId').value,
+      phoneNumber: document.getElementById('phoneNumber').value
+    };
+    fetch('/api/customers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(async res => {
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || Object.values(data).join(' | '));
+      window.location.href = '/customer/dashboard';
+    })
+    .catch(err => {
+      const el = document.getElementById('errAlert');
+      el.innerText = err.message;
+      el.style.display = 'block';
+    });
+  });
+</script>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

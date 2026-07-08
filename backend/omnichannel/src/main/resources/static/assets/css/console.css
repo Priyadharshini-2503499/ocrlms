@@ -1,0 +1,145 @@
+/* =====================================================================
+   Aurelia Retail Console — Shell & design tokens
+   (palette, base type, app layout, sidebar, topbar, page head)
+   No <style> tags anywhere; pages use Bootstrap 5 + these classes.
+   ===================================================================== */
+
+:root {
+  /* 3.1 Brand & neutrals */
+  --bone:     #F4F0E9;
+  --ivory:    #FBF9F5;
+  --surface:  #FFFFFF;
+  --ink:      #1C1B19;
+  --ink-soft: #4A4742;
+  --muted:    #8C887F;
+  --line:     #E4DED3;
+  --line2:    #EFEAE1;
+
+  /* 3.2 Forest (primary) & Gold (loyalty) */
+  --forest:    #1E3A30;
+  --forest-2:  #27483C;
+  --gold:      #B6924C;
+  --gold-deep: #9A7A3A;
+  --gold-soft: #EFE6D2;
+
+  /* 3.3 Status (strong / soft) */
+  --green: #15915B;  --green-soft: #E2F2EA;
+  --info:  #3A5A78;  --info-soft:  #E4EBF1;
+  --rust:  #A8492F;  --rust-soft:  #F6E5DF;
+  --gray:  #8C887F;  --gray-soft:  #ECEAE5;
+
+  /* 3.4 Loyalty tiers */
+  --silver:   #8A8E92;  --silver-soft:   #ECEDEE;
+  --platinum: #5C6166;  --platinum-soft: #E8E9EA;
+
+  /* 3.6 Radius / shadow */
+  --r-pill:   100px;
+  --r-card:   18px;
+  --r-input:  10px;
+  --shadow:    0 24px 60px -34px rgba(28, 27, 25, .45);
+  --shadow-sm: 0 14px 36px -26px rgba(28, 27, 25, .38);
+
+  /* 3.6 Spacing rhythm */
+  --sidebar-w: 256px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bone);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.serif { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; }
+a { color: inherit; text-decoration: none; }
+h1, h2, h3, h4 { margin: 0; }
+
+.text-muted-soft { color: var(--muted) !important; }
+.text-gold       { color: var(--gold-deep) !important; }
+
+/* ---------- App shell ---------- */
+.app { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: var(--sidebar-w); flex: 0 0 var(--sidebar-w);
+  background: linear-gradient(180deg, var(--forest), #18302820 0%, var(--forest) 100%);
+  background: var(--forest);
+  color: #EAF1EC;
+  display: flex; flex-direction: column;
+  padding: 22px 16px; gap: 2px;
+  position: sticky; top: 0; height: 100vh;
+}
+.brand { display: flex; align-items: center; gap: 12px; padding: 6px 8px 22px; }
+.brand .ring {
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 2px solid var(--gold); color: var(--gold);
+  display: grid; place-items: center; font-weight: 600; font-size: 18px;
+  font-family: 'Fraunces', serif;
+}
+.brand .name { font-weight: 600; font-size: 16px; letter-spacing: .2px; line-height: 1.1; }
+.brand .name small { display: block; color: #9FB4A9; font-weight: 400; font-size: 11px; margin-top: 2px; }
+
+.grp { color: #8FA89C; font-size: 10px; text-transform: uppercase; letter-spacing: .14em; padding: 18px 12px 6px; }
+.nav { display: flex; flex-direction: column; gap: 2px; }
+.nav a {
+  display: flex; align-items: center; gap: 11px;
+  padding: 10px 12px; border-radius: 10px;
+  color: #CFE0D7; font-weight: 500; font-size: 14px;
+  transition: background .15s ease, color .15s ease;
+}
+.nav a .ic { width: 17px; height: 17px; opacity: .85; flex: 0 0 17px; }
+.nav a:hover { background: rgba(255, 255, 255, .06); color: #fff; }
+.nav a.active { background: var(--forest-2); color: #fff; box-shadow: inset 3px 0 0 var(--gold); }
+
+.side-foot {
+  margin-top: auto; padding: 12px; color: #9FB4A9; font-size: 12px;
+  border-top: 1px solid rgba(255, 255, 255, .08);
+}
+
+/* ---------- Main column ---------- */
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding: 18px 32px; background: rgba(244,240,233,.85);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5;
+}
+.topbar .tt h1 { font-size: 23px; font-weight: 600; }
+.topbar .tt p { margin: 3px 0 0; color: var(--muted); font-size: 13px; }
+.who { display: flex; align-items: center; gap: 12px; color: var(--ink-soft); font-size: 13px; font-weight: 500; }
+.who .role-pill {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--r-pill); padding: 6px 14px; font-weight: 600; color: var(--ink-soft);
+}
+.avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--gold-soft); color: var(--gold-deep);
+  display: grid; place-items: center; font-weight: 600;
+}
+
+.content { padding: 28px 32px; display: flex; flex-direction: column; gap: 22px; }
+
+/* ---------- Page head ---------- */
+.page-head__eyebrow,
+.eyebrow { color: var(--gold-deep); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .14em; }
+.page-head__title { font-size: 30px; font-weight: 500; margin: 4px 0 0; }
+.page-head__sub { color: var(--muted); font-size: 14px; margin: 5px 0 0; }
+
+.back-link { color: var(--muted); font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
+.back-link:hover { color: var(--forest); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 860px) {
+  .sidebar { position: fixed; left: 0; top: 0; z-index: 40; transform: translateX(-100%); transition: transform .2s ease; }
+  .sidebar.open { transform: none; }
+  .content { padding: 20px 16px; }
+  .topbar { padding: 16px 18px; }
+}
+

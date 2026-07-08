@@ -1,0 +1,4 @@
+# Keep the Maven wrapper scripts at stable, OS-correct line endings.
+# mvnw is executed by bash on the Linux CI runner, so it must stay LF.
+/backend/mvnw    text eol=lf
+/backend/mvnw.cmd text eol=crlf

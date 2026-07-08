@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Customers &amp; Loyalty')}"></head>
+<body th:attr="data-flash=${flash}">
+
+<div class="app">
+  <aside th:replace="~{fragments/layout :: sidebar('admin','customers')}"></aside>
+
+  <main class="main">
+    <header th:replace="~{fragments/layout :: topbar('Customer Profiles &amp; Loyalty','Customer Care','Customer Service Agent','CS')}"></header>
+
+    <section class="content">
+      <div id="ui-alert" class="alert" style="display:none; margin-bottom:12px;"></div>
+      <div class="toolbar">
+        <div>
+          <p class="eyebrow">Customer Care</p>
+          <h2 class="serif" style="font-size:22px;">Customer Registry</h2>
+        </div>
+        <a th:href="@{/customer/register}" class="btn btn-primary">+ Register customer</a>
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Contact Details</th>
+                <th>Points</th>
+                <th>Tier Status</th>
+                <th style="text-align:right; padding-right:24px;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="customerTableBody">
+              <tr><td colspan="5" class="empty">Syncing live account files...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    fetch('/api/customers')
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById('customerTableBody');
+        if (!data || data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" class="empty">No customers available in the system.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = data.map(c => {
+          const tierStyle = c.loyaltyTier === 'SILVER' ? 'b-silver' : c.loyaltyTier === 'GOLD' ? 'b-gold' : 'b-platinum';
+          return `
+            <tr>
+              <td><div style="font-weight:600;color:var(--ink);">${c.fullName}</div><div class="sub">#${c.customerId}</div></td>
+              <td><div>${c.emailId}</div><div class="sub">${c.phoneNumber}</div></td>
+              <td class="mono" style="font-weight:600;">${c.loyaltyPoints}</td>
+              <td><span class="bdg ${tierStyle}"><span class="d"></span>${c.loyaltyTier}</span></td>
+              <td style="text-align:right; padding-right:16px;">
+                <a href="/customer/detail?id=${c.customerId}" class="btn btn-ghost btn-sm">View</a>
+              </td>
+            </tr>`;
+        }).join('');
+      })
+      .catch(() => {
+        document.getElementById('customerTableBody').innerHTML =
+          '<tr><td colspan="5" class="empty">Could not load customers. Please try again.</td></tr>';
+      });
+  });
+</script>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

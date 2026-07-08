@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register Customer · Aurelia Retail Console</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"/>
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Inter:wght@400;500;600&display=swap"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="../assets/css/console.css"/>
+  <link rel="stylesheet" href="../assets/css/components.css"/>
+</head>
+<body>
+
+<div class="app">
+  <aside id="sidebar"></aside>
+
+  <main class="main">
+    <header id="topbar"></header>
+
+    <section class="content">
+      <a href="customers.html" class="back-link">&larr; Back to customers</a>
+
+      <div class="form-wrap">
+      <div class="card">
+        <div class="card-h"><div><h2>New customer</h2><p>Starts at SILVER tier with 0 points.</p></div></div>
+        <div class="card-b">
+          <div id="form-error" class="alert alert-error" style="margin-bottom:18px;display:none;"></div>
+
+          <form id="customer-form">
+            <div class="field">
+              <label>Full name</label>
+              <input type="text" name="fullName" placeholder="Jordan Mehta" required/>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label>Email</label>
+                <input type="email" name="emailId" placeholder="jordan@example.com" required/>
+              </div>
+              <div class="field">
+                <label>Phone</label>
+                <input type="text" name="phoneNumber" placeholder="+91 90000 00000" required/>
+              </div>
+            </div>
+            <div class="form-actions">
+              <a href="customers.html" class="btn btn-ghost">Cancel</a>
+              <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast-wrap"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="customer-form.js"></script>
+</body>
+</html>
+

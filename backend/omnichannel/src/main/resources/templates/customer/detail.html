@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Customer Profile')}"></head>
+<body>
+
+<div class="app">
+  <aside th:replace="~{fragments/layout :: sidebar('admin','customers')}"></aside>
+
+  <main class="main">
+    <header th:replace="~{fragments/layout :: topbar('Customer Profile','Loyalty points &amp; transactions','Customer Service Agent','CS')}"></header>
+
+    <section class="content">
+      <a th:href="@{/customer/dashboard}" class="back-link">&larr; Back to customers</a>
+      <div id="ui-banner" class="alert" style="display:none; margin-bottom:16px;"></div>
+
+      <div class="grid cols-2" style="align-items:start;">
+
+        <!-- Profile card -->
+        <div class="card">
+          <div class="card-h">
+            <div>
+              <h2 id="lblFullName">Name</h2>
+              <p>Account ID: #<span id="lblCustomerId">--</span></p>
+            </div>
+          </div>
+          <div class="card-b">
+            <dl class="kv">
+              <dt>Email</dt><dd id="lblEmailId">--</dd>
+              <dt>Phone</dt><dd id="lblPhoneNumber">--</dd>
+              <dt>Loyalty points</dt>
+              <dd class="mono" style="font-weight:600;color:#b8860b;" id="lblPoints">0</dd>
+              <dt>Tier Level</dt><dd id="lblTier">SILVER</dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- Accrue points card -->
+        <div class="card">
+          <div class="card-h"><div><h2>Accrue Points</h2><p>Add points from a purchase.</p></div></div>
+          <div class="card-b">
+            <form onsubmit="processAccrual(event)">
+              <div class="field">
+                <label>Purchase Amount</label>
+                <div class="input-group">
+                  <span class="addon">₹</span>
+                  <input type="number" id="accrualAmount" step="0.01" min="1" placeholder="99.99" required/>
+                </div>
+                <span class="hint">1 point per ₹1 spent.</span>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Add Points</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Redeem points card -->
+        <div class="card">
+          <div class="card-h"><div><h2>Redeem Points</h2><p>Deduct points for a reward.</p></div></div>
+          <div class="card-b">
+            <form onsubmit="processRedemption(event)">
+              <div class="field">
+                <label>Points to redeem</label>
+                <input type="number" id="redemptionPoints" min="1" placeholder="100" required/>
+                <span class="hint">Available balance verification applied.</span>
+              </div>
+              <div class="form-actions">
+                <button type="submit" id="btnRedeem" class="btn btn-gold">Redeem</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const customerId = urlParams.get('id');
+
+  document.addEventListener('DOMContentLoaded', loadAccountMetrics);
+
+  function triggerNotify(status, msg) {
+    const frame = document.getElementById('ui-banner');
+    frame.className = 'alert ' + (status === 'ok' ? 'alert-ok' : 'alert-error');
+    frame.innerText = msg;
+    frame.style.display = 'block';
+  }
+
+  function loadAccountMetrics() {
+    if (!customerId) return;
+    fetch(`http://localhost:8085/api/customers/${customerId}`)
+        .then(res => res.json())
+        .then(c => {
+            document.getElementById('lblCustomerId').innerText = c.customerId;
+            document.getElementById('lblFullName').innerText = c.fullName;
+            document.getElementById('lblEmailId').innerText = c.emailId;
+            document.getElementById('lblPhoneNumber').innerText = c.phoneNumber;
+            document.getElementById('lblPoints').innerText = c.loyaltyPoints;
+            document.getElementById('btnRedeem').disabled = c.loyaltyPoints === 0;
+            document.getElementById('redemptionPoints').max = c.loyaltyPoints;
+
+
+            const tier = c.loyaltyTier;
+            const tierStyle = tier === 'SILVER' ? 'b-silver' : tier === 'GOLD' ? 'b-gold' : 'b-platinum';
+
+            document.getElementById('lblTier').innerHTML = `
+                <span class="bdg ${tierStyle}">
+                    <span class="d"></span>
+                    ${tier}
+                </span>
+            `;
+        });
+}
+
+  function processAccrual(e) {
+    e.preventDefault();
+    const amt = document.getElementById('accrualAmount').value;
+    fetch('/api/customers/' + customerId + '/accrue?amount=' + amt, { method: 'POST' })
+      .then(res => res.json())
+      .then(data => {
+        triggerNotify('ok', data.message);
+        document.getElementById('accrualAmount').value = '';
+        loadAccountMetrics();
+      });
+  }
+
+  function processRedemption(e) {
+    e.preventDefault();
+    const pts = document.getElementById('redemptionPoints').value;
+    fetch('/api/customers/' + customerId + '/redeem?points=' + pts, { method: 'POST' })
+      .then(async res => {
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Redemption failed');
+        triggerNotify('ok', data.message);
+        document.getElementById('redemptionPoints').value = '';
+        loadAccountMetrics();
+      })
+      .catch(err => triggerNotify('error', err.message));
+  }
+</script>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

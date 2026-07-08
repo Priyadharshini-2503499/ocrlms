@@ -1,0 +1,12 @@
+/backend/src/main/java/com/genc/retailapp/customer/    @person-a
+/backend/src/main/java/com/genc/retailapp/order/       @person-b
+/backend/src/main/java/com/genc/retailapp/product/     @person-c
+/backend/src/main/java/com/genc/retailapp/promotion/   @person-d
+/backend/src/main/java/com/genc/retailapp/returns/     @person-e
+/frontend/src/modules/customer-loyalty/   @person-a
+/frontend/src/modules/order-management/   @person-b
+/frontend/src/modules/product-catalog/    @person-c
+/frontend/src/modules/promotion-coupon/   @person-d
+/frontend/src/modules/return-refund/      @person-e
+/backend/src/main/java/com/genc/retailapp/common/   @your-lead-handle
+/frontend/src/shared/                          @your-lead-handle
