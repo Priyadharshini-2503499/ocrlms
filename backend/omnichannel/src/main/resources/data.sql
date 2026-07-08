@@ -1,5 +1,5 @@
 
-USE orclms_db;
+-- Database is already selected via spring.datasource.url in application.properties
 
 
 SET FOREIGN_KEY_CHECKS = 0;
@@ -70,13 +70,14 @@ INSERT INTO `returnrequest`
 
 
 INSERT INTO `coupon`
-(`couponId`, `couponCode`, `discountType`, `discountValue`, `validFrom`, `validTo`, `couponStatus`) VALUES
-                                                                                                        (1, 'WELCOME10',  'PERCENTAGE', 10.0,  '2026-01-01', '2026-12-31', 'ACTIVE'),
-                                                                                                        (2, 'FLAT500',    'FLAT',      500.0,  '2026-01-01', '2026-12-31', 'ACTIVE'),
-                                                                                                        (3, 'GOLD20',     'PERCENTAGE', 20.0,  '2026-06-01', '2026-06-30', 'ACTIVE'),
-                                                                                                        (4, 'SUMMER15',   'PERCENTAGE', 15.0,  '2025-06-01', '2025-08-31', 'EXPIRED'),   -- past window
-                                                                                                        (5, 'NEWYEAR50',  'FLAT',     1000.0,  '2026-01-01', '2026-01-15', 'EXPIRED'),   -- past window
-                                                                                                        (6, 'FESTIVE25',  'PERCENTAGE', 25.0,  '2026-03-01', '2026-03-31', 'REDEEMED');  -- already used
+(`couponId`, `couponCode`, `discountType`, `discountValue`, `validFrom`, `validTo`, `couponStatus`, `targetTier`, `minimumBasketValue`, `maxRedemptionCount`, `redemptionCount`) VALUES
+  (1, 'WELCOME10',  'PERCENTAGE', 10.0,   '2026-01-01', '2026-12-31', 'ACTIVE',   'GLOBAL',   500.0,    0,  0),  -- first-time only, min ₹500
+  (2, 'FLAT500',    'FLAT',      500.0,   '2026-01-01', '2026-12-31', 'ACTIVE',   'GLOBAL',  1000.0,    0,  0),  -- min ₹1000
+  (3, 'GOLD20',     'PERCENTAGE', 20.0,   '2026-07-01', '2026-12-31', 'ACTIVE',   'GOLD',       0.0,   50,  0),  -- GOLD tier only, max 50 uses
+  (4, 'SUMMER15',   'PERCENTAGE', 15.0,   '2025-06-01', '2025-08-31', 'EXPIRED',  'GLOBAL',     0.0,    0,  0),  -- past window
+  (5, 'NEWYEAR50',  'FLAT',     1000.0,   '2026-01-01', '2026-01-15', 'EXPIRED',  'GLOBAL',     0.0,    0,  0),  -- past window
+  (6, 'FESTIVE25',  'PERCENTAGE', 25.0,   '2026-03-01', '2026-03-31', 'REDEEMED', 'GLOBAL',     0.0,    1,  1),  -- already used
+  (7, 'PLATINUM30', 'PERCENTAGE', 30.0,   '2026-01-01', '2026-12-31', 'ACTIVE',   'PLATINUM',   0.0,    0,  0);  -- platinum tier only
 
 
 ALTER TABLE `Customer`      AUTO_INCREMENT = 9;
@@ -84,7 +85,7 @@ ALTER TABLE `product`       AUTO_INCREMENT = 9;
 ALTER TABLE `orders`        AUTO_INCREMENT = 8;
 ALTER TABLE `order_items`   AUTO_INCREMENT = 11;
 ALTER TABLE `returnrequest` AUTO_INCREMENT = 5;
-ALTER TABLE `coupon`        AUTO_INCREMENT = 7;
+ALTER TABLE `coupon`        AUTO_INCREMENT = 8;
 
 
 

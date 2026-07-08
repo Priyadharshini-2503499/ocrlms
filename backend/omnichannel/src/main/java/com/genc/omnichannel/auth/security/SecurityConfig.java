@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -14,6 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity   // enables @PreAuthorize / @PostAuthorize on controller methods
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtFilter;
@@ -33,12 +35,15 @@ public class SecurityConfig {
                 .requestMatchers("/index.html", "/login.html", "/login.js").permitAll()
                 .requestMatchers("/assets/**").permitAll()
                 .requestMatchers("/*.html", "/*.js", "/*.css").permitAll()
-                    .requestMatchers("/api/promotions/coupons/tier/**").permitAll()
+                .requestMatchers("/api/promotions/coupons/tier/**").permitAll()
+
                 // Role-based access to API endpoints
                 .requestMatchers("/products/**").hasAnyRole("ADMIN", "STORE_MANAGER", "MERCHANDISER")
                 .requestMatchers("/api/orders/**").hasAnyRole("ADMIN", "STORE_MANAGER", "CUSTOMER_SERVICE")
                 .requestMatchers("/api/customers/**").hasAnyRole("ADMIN", "CUSTOMER_SERVICE")
-                .requestMatchers("/api/promotions/**").hasAnyRole("ADMIN", "MERCHANDISER", "MARKETING_MANAGER")
+                // Promotions: read + apply allowed for ADMIN and MARKETING_MANAGER;
+                // write operations (create/update/delete) are further restricted by @PreAuthorize
+                .requestMatchers("/api/promotions/**").hasAnyRole("ADMIN", "MARKETING_MANAGER")
                 .requestMatchers("/api/returns/**").hasAnyRole("ADMIN", "STORE_MANAGER", "CUSTOMER_SERVICE")
                 .requestMatchers("/api/auth/users/**").hasRole("ADMIN")
 
@@ -68,4 +73,3 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 }
-

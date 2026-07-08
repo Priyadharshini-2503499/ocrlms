@@ -30,13 +30,17 @@ CREATE TABLE Orders (
 );
 
 CREATE TABLE Coupon (
-                        couponId INT AUTO_INCREMENT PRIMARY KEY,
-                        couponCode VARCHAR(50),
-                        discountType VARCHAR(50),
-                        discountValue DECIMAL(10,2),
-                        validFrom DATE,
-                        validTo DATE,
-                        couponStatus ENUM('ACTIVE','EXPIRED','REDEEMED')
+    couponId            INT AUTO_INCREMENT PRIMARY KEY,
+    couponCode          VARCHAR(50)  NOT NULL UNIQUE,
+    discountType        VARCHAR(20)  NOT NULL,
+    discountValue       DECIMAL(10,2) NOT NULL,
+    validFrom           DATE         NOT NULL,
+    validTo             DATE         NOT NULL,
+    couponStatus        ENUM('ACTIVE','EXPIRED','REDEEMED','INACTIVE') NOT NULL DEFAULT 'ACTIVE',
+    targetTier          VARCHAR(50)  DEFAULT 'GLOBAL',
+    minimumBasketValue  DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    maxRedemptionCount  INT          NOT NULL DEFAULT 0,
+    redemptionCount     INT          NOT NULL DEFAULT 0
 );
 
 CREATE TABLE ReturnRequest (

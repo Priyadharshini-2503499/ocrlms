@@ -58,7 +58,11 @@ export const ReturnAPI = {
 // promotions-service  ->  /api/promotions
 export const PromotionAPI = {
   list:   ()              => api.get(`/api/promotions/coupons`),
+  get:    (id)            => api.get(`/api/promotions/coupons/${id}`),
   create: (body)          => api.post(`/api/promotions/coupons`, body),
-  apply:  (code, amount)  => api.post(`/api/promotions/apply?code=${encodeURIComponent(code)}&amount=${Number(amount)}`),
+  update: (id, body)      => api.put(`/api/promotions/coupons/${id}`, body),
+  remove: (id)            => api.del(`/api/promotions/coupons/${id}`),
+  // apply now takes a JSON body: { code, amount, customerId? }
+  apply:  (body)          => api.post(`/api/promotions/apply`, body),
 };
 
