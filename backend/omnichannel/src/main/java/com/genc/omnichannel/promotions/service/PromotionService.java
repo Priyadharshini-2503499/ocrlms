@@ -249,17 +249,6 @@ public class PromotionService {
     }
 
     // =========================================================
-    //  MARK REDEEMED (kept for backward compatibility)
-    // =========================================================
-
-    @Transactional
-    public void markCouponRedeemed(String code) {
-        Coupon coupon = validateCoupon(code, null, 0);
-        coupon.setCouponStatus(Coupon.CouponStatus.REDEEMED);
-        repo.save(coupon);
-    }
-
-    // =========================================================
     //  HELPERS
     // =========================================================
 

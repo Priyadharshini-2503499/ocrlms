@@ -1,18 +1,3 @@
-// =====================================================================
-// promotion/index.js — Coupon Management (create, edit, delete, simulate)
-//
-// Root causes fixed in this file:
-//  1. buildLayout() no longer needs role/initials — layout.js reads from session.
-//  2. Auth guard added: redirect to login if no token.
-//  3. Role check uses getBackendRole() from session, not a hardcoded string.
-//  4. Apply form correctly maps input name attributes to form values.
-//  5. Apply result shows backend error messages verbatim (e.g. tier mismatch,
-//     first-time customer, min basket value).
-//  6. Edit modal correctly pre-fills all coupon fields including dates as strings.
-//  7. Row actions (Edit/Delete) only rendered for ADMIN and MARKETING_MANAGER.
-//  8. Table and layout update dynamically after every create / update / delete.
-// =====================================================================
-
 import { buildLayout } from "../assets/js/layout.js";
 import { PromotionAPI } from "../assets/js/endpoints.js";
 import { money, badge, escapeHtml, showToast, el } from "../assets/js/ui.js";
@@ -70,11 +55,16 @@ function minBasketText(v) {
 function rowHtml(c) {
   const actionsCells = canWrite
     ? `<td style="white-space:nowrap;">
-         <button class="btn-edit" id="edit-btn-${c.couponId}"
-                 onclick="window._editCoupon(${c.couponId})">Edit</button>
-         <button class="btn-del" id="del-btn-${c.couponId}"
+         <button class="btn-icon-edit" id="edit-btn-${c.couponId}"
+                 onclick="window._editCoupon(${c.couponId})"
+                 title="Edit coupon">
+           <i class="bi bi-pencil-square"></i>
+         </button>
+         <button class="btn-icon-del" id="del-btn-${c.couponId}"
                  onclick="window._deleteCoupon(${c.couponId}, '${escapeHtml(c.couponCode)}')"
-                 style="margin-left:4px;">Delete</button>
+                 title="Delete coupon">
+           <i class="bi bi-trash3"></i>
+         </button>
        </td>`
     : "";
 
@@ -169,12 +159,7 @@ if (createForm) {
     }
   });
 }
-
 // ---- APPLY / SIMULATE ----------------------------------------------
-// Root cause: form input name attributes are used to access values.
-// Input for code has name="code", basket has name="amount", customer has name="customerId".
-// The apply endpoint returns error messages from the backend verbatim —
-// this means tier mismatch, WELCOME10, and min-basket messages all surface in the UI.
 
 el("apply-form").addEventListener("submit", async (e) => {
   e.preventDefault();
